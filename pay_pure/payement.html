@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Initiation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+    <div class="w-2/4 m-auto p-20">
+        <p class="text-4xl text-gray-400 text-center">Initiate Payment</p>
+
+        <form id="paymentForm">
+            <label for="amount">Amount:</label>
+            <input type="text" id="amount" name="amount"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "  required><br><br>
+    
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required><br><br>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "  required><br><br>
+    
+            <label for="ref">Reference:</label>
+            <input type="text" id="ref" name="ref" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "  required><br><br>
+    
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+        </form>
+    
+
+
+      </div>
+ 
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const ref = document.getElementById('ref').value;
+
+            const token = "Lu2o6W1zNnQ0K9l8wEO7QDIl0F7yi5FoAayiXFdS";
+
+            try {
+                const response = await fetch(
+                    `https://c7drkx2ege.execute-api.eu-west-2.amazonaws.com/payment/initiate?id=w2eOWDJ9be09noJkVQrOKBjDgyNmqd8qXAZMzRxW2w1l647GP53aAYEXLzb35nN4&amount=${amount}&phone=${phone}&email=${email}&backend_url=https://MAIN-DOMAIN/[ControllerName]/[Endpoint]&frontend_url=https://www.YOUR_STORE_DOMAIN.com/Redirect_Success_Page&custom_ref=${ref}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    }
+                );
+
+                if (response.status === 200) {
+                    const responseData = await response.json();
+                    const redirectUrl = responseData.url; // Replace with the actual response property
+                    window.location.href = redirectUrl;
+                } else {
+                    console.log('Payment initiation failed');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
